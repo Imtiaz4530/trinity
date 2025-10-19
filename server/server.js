@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
     res.send('Hello from the server!');
 });
 
-app.get("/api/user", userRoutes)
+app.use("/api/user", userRoutes)
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
