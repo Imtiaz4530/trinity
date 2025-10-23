@@ -1,0 +1,106 @@
+/* === CONTAINER === */
+.container {
+  min-height: 100vh;
+  background: #0f0f10;
+  color: #f1f1f1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  font-family: 'Poppins', sans-serif;
+ padding: 60px 20px 80px;
+   position: relative;
+  
+}
+
+/* === CONTENT === */
+.content {
+  width: 100%;
+  max-width: 750px;
+  background: #1c1c1f;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+  padding: 2.5rem;
+}
+
+/* === HEADING === */
+.heading {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #fff;
+}
+
+/* === BOOK LIST === */
+.bookList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bookList li {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.bookLink {
+  color: #00aaff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.bookLink:hover {
+  color: #33d0ff;
+}
+
+/* === PAGINATION === */
+.pagination {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1c1c1f;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  z-index: 10;
+}
+.pagination button {
+  background: linear-gradient(135deg, #0078ff, #00d4ff);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 600px) {
+  .content {
+    padding: 1.5rem;
+  }
+
+  .heading {
+    font-size: 1.6rem;
+  }
+}
