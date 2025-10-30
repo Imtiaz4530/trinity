@@ -1,4 +1,5 @@
 import {Route, Routes} from "react-router-dom"
+import { useQuery } from "@tanstack/react-query";
 
 import Home from "./Pages/home/Home"
 import Register from "./Pages/register/Register"
@@ -11,23 +12,29 @@ import Navbar from "./Pages/navbar/Navabar"
 
 
 const App = () => {
-  const [stories, setStories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [stories, setStories] = useState([]);
+  // const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadStories = async () => {
-      try {
-        const data = await fetchStories();
-        setStories(data);
-      } catch (error) {
-        console.error("Error fetching stories:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data: stories = [], isLoading: loading } = useQuery({
+    queryKey: ["stories"],
+    queryFn: fetchStories,
+  });
 
-    loadStories();
-  }, []);
+
+  // useEffect(() => {
+  //   const loadStories = async () => {
+  //     try {
+  //       const data = await fetchStories();
+  //       setStories(data);
+  //     } catch (error) {
+  //       console.error("Error fetching stories:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   loadStories();
+  // }, []);
 
   return (
     <>

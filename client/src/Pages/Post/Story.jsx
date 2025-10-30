@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import styles from "./Story.module.css";
 import { useParams } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import styles from "./Story.module.css";
 import Loading from "../loading/Loading";
+import { addStoryPart } from "../../api/storyApi";
 
 const Story = ({ stories, loading }) => {
   const [story, setStory] = useState(null);
@@ -9,7 +12,11 @@ const Story = ({ stories, loading }) => {
   const [words, setWords] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [newContent, setNewContent] = useState("");
+
   const { id } = useParams();
+  const queryClient = useQueryClient();
   const wordsPerPage = 15000;
 
   useEffect(() => {
@@ -45,14 +52,64 @@ const Story = ({ stories, loading }) => {
     }
   };
 
-  // 🔥 This ensures scroll happens *after* content updates
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
 
-  const handleAddPart = () => {
-    alert("Feature coming soon: Add more parts to this story!");
-  };
+   const handleAddPart = () => setShowModal(true);
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!newContent.trim()) {
+  //     alert("⚠️ Content field is required!");
+  //     return;
+  //   }
+
+  //   try { 
+  //     const storyData = {
+  //       title: story?.title,
+  //       content: newContent
+  //     };
+
+  //     const res = await addStoryPart(storyData);
+
+  //     console.log("Part submitted:", res);
+  //     alert("✅ New part submitted (API logic to be added).");
+  //     setNewContent("");
+  //     setShowModal(false);
+  //   } catch (error) {
+  //     console.error("Error submitting story:", error);
+  //     alert("❌ Failed to post story. Please try again.");
+  //   }
+  // };
+  const mutation = useMutation({
+  mutationFn: addStoryPart,
+  onSuccess: () => {
+    queryClient.invalidateQueries(["stories"]);
+    setNewContent("");
+    setShowModal(false);
+  },
+  onError: (error) => {
+    console.error("Error submitting story:", error);
+    alert("❌ Failed to post story. Please try again.");
+  },
+});
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  if (!newContent.trim()) {
+    alert("⚠️ Content field is required!");
+    return;
+  }
+
+  mutation.mutate({
+    title: story?.title,
+    content: newContent,
+  });
+};
+
 
   if (loading || !story || !words.length) {
     return <Loading />
@@ -100,6 +157,39 @@ const Story = ({ stories, loading }) => {
           Next ▶
         </button>
       </div>
+
+      {showModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <h2>Add New Part</h2>
+            <form onSubmit={handleSubmit} className={styles.modalForm}>
+              <input
+                type="text"
+                name="title"
+                placeholder="Part title"
+                value={story?.title}
+                required
+                disabled
+              />
+              <textarea
+                name="content"
+                placeholder="Write your part..."
+                rows="6"
+                value={newContent}
+                onChange={(e) => setNewContent(e.target.value)}
+                required
+              ></textarea>
+
+              <div className={styles.modalActions}>
+                <button type="button" onClick={() => setShowModal(false)}>
+                  Cancel
+                </button>
+                <button type="submit">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

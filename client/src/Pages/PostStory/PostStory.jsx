@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom"; 
 
 import { createStory } from "../../api/storyApi";
 import styles from "./PostStory.module.css";
-import { useNavigate } from "react-router-dom";
 
 const PostStory = () => {
   const [formData, setFormData] = useState({
@@ -10,38 +11,63 @@ const PostStory = () => {
     link: "",
     content: "",
   });
-  
-   const navigate = useNavigate();
+
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: createStory,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["stories"]);
+
+      setFormData({ title: "", link: "", content: "" });
+      navigate("/");
+    },
+    onError: () => {
+      alert("❌ Failed to post story. Please try again.");
+    },
+  });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
+//   const handleSubmit = async (e) => {
+//   e.preventDefault();
 
-  try {
+//   try {
+//     const storyData = {
+//       title: formData.title,
+//       link: formData.link,
+//       content: [formData.content], 
+//     };
+
+//     const res = await createStory(storyData);
+
+//     console.log("Story submitted successfully:", res);
+//     setFormData({ title: "", link: "", content: "" });
+
+//     setTimeout(() => {
+//         navigate("/");
+//     }, 1000);
+
+//   } catch (error) {
+//     console.error("Error submitting story:", error);
+//     alert("❌ Failed to post story. Please try again.");
+//   }
+// };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
     const storyData = {
       title: formData.title,
       link: formData.link,
-      content: [formData.content], 
+      content: [formData.content],
     };
 
-    const res = await createStory(storyData);
-
-    console.log("Story submitted successfully:", res);
-    alert("✅ Story posted successfully!");
-    setFormData({ title: "", link: "", content: "" });
-
-      setTimeout(() => {
-        navigate("/");
-      }, 400);
-
-  } catch (error) {
-    console.error("Error submitting story:", error);
-    alert("❌ Failed to post story. Please try again.");
-  }
-};
+    mutate(storyData); 
+  };
 
   return (
     <div className={styles.container}>

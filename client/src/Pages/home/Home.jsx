@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import styles from "./Home.module.css";
+import Loading from "../loading/Loading";
 
 const Home = ({stories, loading}) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,9 +16,15 @@ const Home = ({stories, loading}) => {
 
   const totalPages = Math.ceil(stories.length / booksPerPage);
 
+   console.log(totalPages);
+
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
+
+  if (loading) {
+    return <Loading />
+  }
 
   return (
     <div className={styles.container}>
@@ -33,7 +40,7 @@ const Home = ({stories, loading}) => {
         </div>
 
         <ul className={styles.bookList}>
-          {!loading && currentBooks.map((book) => (
+          {stories.length === 0 ? <div className={styles.noStories}>No stories available</div> : currentBooks.map((book) => (
             <li key={book._id}>
               <a href={`/story/${book._id}`} className={styles.bookLink}>
                 {book.title}
@@ -55,7 +62,7 @@ const Home = ({stories, loading}) => {
           </span>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            disabled={totalPages === 0 ||currentPage === totalPages}
           >
             Next ▶
           </button>

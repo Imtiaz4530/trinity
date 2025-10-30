@@ -18,8 +18,8 @@ export const createStory = async (storyData) => {
   return res.data;
 };
 
-// // 🟢 Add a new part to a story
-// export const addStoryPart = async (storyId, newPartText) => {
-//   const res = await API.put(`/stories/${storyId}/add-part`, { newPart: newPartText });
-//   return res.data;
-// };
+// 🟢 Add a new part to a story
+export const addStoryPart = async (storyData) => {
+  const res = await API.post("/story/add", storyData);
+  return res.data;
+};
