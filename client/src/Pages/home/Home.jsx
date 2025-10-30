@@ -1,22 +1,19 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import styles from "./Home.module.css";
 
-const Home = () => {
-  // Dummy book data (you can replace this with your backend data later)
-  const books = Array.from({ length: 72 }, (_, i) => ({
-    id: i + 1,
-    title: ` Book Title ${i + 1}`,
-  }));
-
+const Home = ({stories, loading}) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const booksPerPage = 15;
+  const navigate = useNavigate();
 
   // Pagination calculations
+  const booksPerPage = 15;
   const indexOfLastBook = currentPage * booksPerPage;
   const indexOfFirstBook = indexOfLastBook - booksPerPage;
-  const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
+  const currentBooks = stories.slice(indexOfFirstBook, indexOfLastBook);
 
-  const totalPages = Math.ceil(books.length / booksPerPage);
+  const totalPages = Math.ceil(stories.length / booksPerPage);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) setCurrentPage(page);
@@ -25,12 +22,20 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-        <h1 className={styles.heading}>📚 Book Library</h1>
+         <div className={styles.header}>
+          <h1 className={styles.heading}>📚 Story Library</h1>
+          <button
+            className={styles.createBtn}
+            onClick={() => navigate("/postStory")}
+          >
+            Create Post
+          </button>
+        </div>
 
         <ul className={styles.bookList}>
-          {currentBooks.map((book) => (
-            <li key={book.id}>
-              <a href={`/books/${book.id}`} className={styles.bookLink}>
+          {!loading && currentBooks.map((book) => (
+            <li key={book._id}>
+              <a href={`/story/${book._id}`} className={styles.bookLink}>
                 {book.title}
               </a>
             </li>

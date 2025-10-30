@@ -1,33 +1,86 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Story.module.css";
+import { useParams } from "react-router-dom";
+import Loading from "../loading/Loading";
 
-const generateLongContent = (length) => {
-  const words = Array.from({ length }, (_, i) => `word${i + 1}`);
-  return words.join(" ");
-};
-
-const Story = () => {
-  const title = "The Journey Beyond the Stars";
-  const content = generateLongContent(150000); // simulate a long story
-
-  const words = content.split(" ");
-  const wordsPerPage = 15000; 
-  const totalPages = Math.ceil(words.length / wordsPerPage);
-
+const Story = ({ stories, loading }) => {
+  const [story, setStory] = useState(null);
+  const [content, setContent] = useState("");
+  const [words, setWords] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const { id } = useParams();
+  const wordsPerPage = 15000;
+
+  useEffect(() => {
+    if (!loading) {
+      const story = stories.find((s) => s._id === id);
+      if (story) setStory(story);
+    }
+  }, [loading, stories, id]);
+
+  useEffect(() => {
+    if (story) {
+      const fullContent = story.content.join(" ");
+      setContent(fullContent);
+    }
+  }, [story]);
+
+  useEffect(() => {
+    if (content) {
+      const wordArray = content.split(" ");
+      const total = Math.ceil(wordArray.length / wordsPerPage);
+      setWords(wordArray);
+      setTotalPages(total);
+    }
+  }, [content]);
 
   const start = (currentPage - 1) * wordsPerPage;
   const end = start + wordsPerPage;
   const currentText = words.slice(start, end).join(" ");
 
   const handlePageChange = (page) => {
-    if (page >= 1 && page <= totalPages) setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
   };
+
+  // 🔥 This ensures scroll happens *after* content updates
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
+
+  const handleAddPart = () => {
+    alert("Feature coming soon: Add more parts to this story!");
+  };
+
+  if (loading || !story || !words.length) {
+    return <Loading />
+  }
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>{title}</h1>
+      <div className={styles.header}>
+        <h1 className={styles.title}>{story?.title}</h1>
+        <button className={styles.addPartBtn} onClick={handleAddPart}>
+          Add Part
+        </button>
+      </div>
+
+      <div className={styles.linkSection}>
+        {story?.link && (
+          <a
+            href={story.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.storyLink}
+          >
+            🔗 {story.link}
+          </a>
+        )}
+     
+      </div>
+
       <div className={styles.content}>{currentText}</div>
 
       <div className={styles.pagination}>

@@ -1,23 +1,47 @@
 import React, { useState } from "react";
+
+import { createStory } from "../../api/storyApi";
 import styles from "./PostStory.module.css";
+import { useNavigate } from "react-router-dom";
 
 const PostStory = () => {
   const [formData, setFormData] = useState({
     title: "",
     link: "",
-    story: "",
+    content: "",
   });
+  
+   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Submitted Story:", formData);
-    alert("Story submitted successfully!");
-    setFormData({ title: "", link: "", story: "" });
-  };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const storyData = {
+      title: formData.title,
+      link: formData.link,
+      content: [formData.content], 
+    };
+
+    const res = await createStory(storyData);
+
+    console.log("Story submitted successfully:", res);
+    alert("✅ Story posted successfully!");
+    setFormData({ title: "", link: "", content: "" });
+
+      setTimeout(() => {
+        navigate("/");
+      }, 400);
+
+  } catch (error) {
+    console.error("Error submitting story:", error);
+    alert("❌ Failed to post story. Please try again.");
+  }
+};
 
   return (
     <div className={styles.container}>
@@ -51,11 +75,11 @@ const PostStory = () => {
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="story">Story</label>
+            <label htmlFor="content">Story</label>
             <textarea
-              id="story"
-              name="story"
-              value={formData.story}
+              id="content"
+              name="content"
+              value={formData.content}
               onChange={handleChange}
               placeholder="Write your story here..."
               rows="10"
