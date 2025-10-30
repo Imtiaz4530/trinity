@@ -34,8 +34,30 @@ const createStory = async (req, res) => {
     }
 }
 
-const editStory = async (req, res) => {
-    
+const addStory = async (req, res) => {
+    const { title, content } = req.body;
+
+    try {
+        
+        if (!title || !content) {
+            return res.status(400).json({ message: 'Title and content are required' });
+        }
+
+        const existStory = await Story.findOne({title});
+
+        if (!existStory) {
+            return res.status(404).json({ message: 'Story not found' });
+        }
+
+        existStory.content.push(content)
+        await existStory.save();
+
+        res.status(200).json({ story: existStory, message: 'New part added successfully!' });
+
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({ message: 'Server Error' });
+    }
 }
 
 const getAllStories = async (req, res) => {
@@ -50,4 +72,4 @@ const getAllStories = async (req, res) => {
 }
 
 
-module.exports = { createStory, getAllStories };
+module.exports = { createStory, addStory, getAllStories };
