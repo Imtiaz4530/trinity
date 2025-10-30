@@ -25,15 +25,16 @@
 }
 
 .addPartBtn {
-  background: #0078ff;
+  background: linear-gradient(135deg, #0078ff, #00d4ff);
+  color: white;
   border: none;
   border-radius: 8px;
-  padding: 0.4rem 0.9rem;
-  color: white;
+  padding: 0.7rem 1.2rem;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  letter-spacing: 1.5px;
 }
 
 .addPartBtn:hover {
