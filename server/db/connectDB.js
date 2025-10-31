@@ -5,7 +5,14 @@ const connectDB = async () => {
     console.log("Database connected! 🧨");
   });
 
+  try {
   await mongoose.connect(`${process.env.MONGODB_URI}/trinity`);
+  console.log("✅ MongoDB connected");
+} catch (err) {
+  console.error("❌ MongoDB connection error:", err);
+}
 };
 
 module.exports = connectDB;
+
+
