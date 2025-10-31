@@ -58,31 +58,6 @@ const Story = ({ stories, loading }) => {
 
    const handleAddPart = () => setShowModal(true);
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (!newContent.trim()) {
-  //     alert("⚠️ Content field is required!");
-  //     return;
-  //   }
-
-  //   try { 
-  //     const storyData = {
-  //       title: story?.title,
-  //       content: newContent
-  //     };
-
-  //     const res = await addStoryPart(storyData);
-
-  //     console.log("Part submitted:", res);
-  //     alert("✅ New part submitted (API logic to be added).");
-  //     setNewContent("");
-  //     setShowModal(false);
-  //   } catch (error) {
-  //     console.error("Error submitting story:", error);
-  //     alert("❌ Failed to post story. Please try again.");
-  //   }
-  // };
   const mutation = useMutation({
   mutationFn: addStoryPart,
   onSuccess: () => {

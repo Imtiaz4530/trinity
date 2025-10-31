@@ -6,35 +6,15 @@ import Register from "./Pages/register/Register"
 import Login from "./Pages/login/Login"
 import Story from "./Pages/Post/Story"
 import PostStory from "./Pages/PostStory/PostStory"
-import { useEffect, useState } from "react"
-import { fetchStories } from "./api/storyApi"
 import Navbar from "./Pages/navbar/Navabar"
+import { fetchStories } from "./api/storyApi"
 
 
 const App = () => {
-  // const [stories, setStories] = useState([]);
-  // const [loading, setLoading] = useState(true);
-
   const { data: stories = [], isLoading: loading } = useQuery({
     queryKey: ["stories"],
     queryFn: fetchStories,
   });
-
-
-  // useEffect(() => {
-  //   const loadStories = async () => {
-  //     try {
-  //       const data = await fetchStories();
-  //       setStories(data);
-  //     } catch (error) {
-  //       console.error("Error fetching stories:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   loadStories();
-  // }, []);
 
   return (
     <>

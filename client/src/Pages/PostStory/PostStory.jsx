@@ -32,31 +32,6 @@ const PostStory = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-//   const handleSubmit = async (e) => {
-//   e.preventDefault();
-
-//   try {
-//     const storyData = {
-//       title: formData.title,
-//       link: formData.link,
-//       content: [formData.content], 
-//     };
-
-//     const res = await createStory(storyData);
-
-//     console.log("Story submitted successfully:", res);
-//     setFormData({ title: "", link: "", content: "" });
-
-//     setTimeout(() => {
-//         navigate("/");
-//     }, 1000);
-
-//   } catch (error) {
-//     console.error("Error submitting story:", error);
-//     alert("❌ Failed to post story. Please try again.");
-//   }
-// };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 

@@ -16,8 +16,6 @@ const Home = ({stories, loading}) => {
 
   const totalPages = Math.ceil(stories.length / booksPerPage);
 
-   console.log(totalPages);
-
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) setCurrentPage(page);
   };
